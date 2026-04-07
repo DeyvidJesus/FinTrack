@@ -1,0 +1,63 @@
+import { useQuery } from "@tanstack/react-query";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
+import type { Account } from "@shared/schema";
+
+interface AccountSwitcherProps {
+  value: string;
+  onChange: (value: string) => void;
+  showAll?: boolean;
+  filterType?: "personal" | "company";
+}
+
+export function AccountSwitcher({ value, onChange, showAll = true, filterType }: AccountSwitcherProps) {
+  const { data: accounts = [] } = useQuery<Account[]>({
+    queryKey: ["/api/accounts"],
+  });
+
+  const filtered = filterType ? accounts.filter((a) => a.type === filterType) : accounts;
+  const personalAccounts = filtered.filter((a) => a.type === "personal");
+  const companyAccounts = filtered.filter((a) => a.type === "company");
+  const hasAccounts = filtered.length > 0;
+
+  return (
+    <Select value={value} onValueChange={onChange} disabled={!hasAccounts && !showAll}>
+      <SelectTrigger className="w-[200px]" data-testid="select-account-switcher">
+        <SelectValue placeholder={hasAccounts ? "All Accounts" : "No accounts yet"} />
+      </SelectTrigger>
+      <SelectContent>
+        {showAll && <SelectItem value="all">All Accounts</SelectItem>}
+        {personalAccounts.length > 0 && (
+          <SelectGroup>
+            <SelectLabel>Personal</SelectLabel>
+            {personalAccounts.map((account) => (
+              <SelectItem key={account.id} value={String(account.id)}>
+                <span className="flex items-center gap-2">
+                  <span className="h-2 w-2 rounded-full" style={{ backgroundColor: account.color }} />
+                  {account.name}
+                </span>
+              </SelectItem>
+            ))}
+          </SelectGroup>
+        )}
+        {companyAccounts.length > 0 && (
+          <SelectGroup>
+            <SelectLabel>Company</SelectLabel>
+            {companyAccounts.map((account) => (
+              <SelectItem key={account.id} value={String(account.id)}>
+                <span className="flex items-center gap-2">
+                  <span className="h-2 w-2 rounded-full" style={{ backgroundColor: account.color }} />
+                  {account.name}
+                </span>
+              </SelectItem>
+            ))}
+          </SelectGroup>
+        )}
+        {!hasAccounts && !showAll && (
+          <SelectItem value="no-accounts" disabled>
+            No accounts available
+          </SelectItem>
+        )}
+      </SelectContent>
+    </Select>
+  );
+}
