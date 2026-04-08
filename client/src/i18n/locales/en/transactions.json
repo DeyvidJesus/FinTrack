@@ -1,0 +1,32 @@
+{
+  "title": "Transactions",
+  "subtitle": "Manage your income and expenses",
+  "dialog": {
+    "newTransaction": "New Transaction"
+  },
+  "form": {
+    "type": "Type",
+    "account": "Account",
+    "description": "Description",
+    "amount": "Amount",
+    "date": "Date",
+    "category": "Category",
+    "notes": "Notes",
+    "typeIncome": "Income",
+    "typeExpense": "Expense",
+    "placeholderDescription": "e.g. Grocery store",
+    "placeholderAmount": "0.00",
+    "placeholderSelect": "Select",
+    "placeholderOptional": "Optional"
+  },
+  "messages": {
+    "added": "Transaction added",
+    "deleted": "Transaction deleted",
+    "failedToAdd": "Failed to add transaction",
+    "createAccountFirst": "Create an account first so this transaction has somewhere to land."
+  },
+  "empty": {
+    "noAccount": "Create an account before adding transactions.",
+    "noTransactions": "No transactions yet. Add your first one above."
+  }
+}

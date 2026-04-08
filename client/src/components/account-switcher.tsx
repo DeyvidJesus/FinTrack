@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { Account } from "@shared/schema";
 
@@ -13,6 +14,7 @@ export function AccountSwitcher({ value, onChange, showAll = true, filterType }:
   const { data: accounts = [] } = useQuery<Account[]>({
     queryKey: ["/api/accounts"],
   });
+  const { t } = useTranslation('common');
 
   const filtered = filterType ? accounts.filter((a) => a.type === filterType) : accounts;
   const personalAccounts = filtered.filter((a) => a.type === "personal");
@@ -22,13 +24,13 @@ export function AccountSwitcher({ value, onChange, showAll = true, filterType }:
   return (
     <Select value={value} onValueChange={onChange} disabled={!hasAccounts && !showAll}>
       <SelectTrigger className="w-[200px]" data-testid="select-account-switcher">
-        <SelectValue placeholder={hasAccounts ? "All Accounts" : "No accounts yet"} />
+        <SelectValue placeholder={hasAccounts ? t('common.allAccounts') : t('common.noAccountsYet')} />
       </SelectTrigger>
       <SelectContent>
-        {showAll && <SelectItem value="all">All Accounts</SelectItem>}
+        {showAll && <SelectItem value="all">{t('common.allAccounts')}</SelectItem>}
         {personalAccounts.length > 0 && (
           <SelectGroup>
-            <SelectLabel>Personal</SelectLabel>
+            <SelectLabel>{t('common.personal')}</SelectLabel>
             {personalAccounts.map((account) => (
               <SelectItem key={account.id} value={String(account.id)}>
                 <span className="flex items-center gap-2">
@@ -41,7 +43,7 @@ export function AccountSwitcher({ value, onChange, showAll = true, filterType }:
         )}
         {companyAccounts.length > 0 && (
           <SelectGroup>
-            <SelectLabel>Company</SelectLabel>
+            <SelectLabel>{t('common.company')}</SelectLabel>
             {companyAccounts.map((account) => (
               <SelectItem key={account.id} value={String(account.id)}>
                 <span className="flex items-center gap-2">
@@ -54,7 +56,7 @@ export function AccountSwitcher({ value, onChange, showAll = true, filterType }:
         )}
         {!hasAccounts && !showAll && (
           <SelectItem value="no-accounts" disabled>
-            No accounts available
+            {t('common.noAccountsAvailable')}
           </SelectItem>
         )}
       </SelectContent>

@@ -1,5 +1,6 @@
 import { LayoutDashboard, ArrowLeftRight, TrendingUp, Target, Wallet, Settings, Sun, Moon } from "lucide-react";
 import { Link, useLocation } from "wouter";
+import { useTranslation } from "react-i18next";
 import {
   Sidebar,
   SidebarContent,
@@ -15,17 +16,18 @@ import {
 import { useTheme } from "@/components/theme-provider";
 import { Button } from "@/components/ui/button";
 
-const navItems = [
-  { title: "Dashboard", url: "/", icon: LayoutDashboard },
-  { title: "Transactions", url: "/transactions", icon: ArrowLeftRight },
-  { title: "Investments", url: "/investments", icon: TrendingUp },
-  { title: "Goals", url: "/goals", icon: Target },
-  { title: "Accounts", url: "/accounts", icon: Wallet },
-];
-
 export function AppSidebar() {
   const [location] = useLocation();
   const { theme, toggleTheme } = useTheme();
+  const { t } = useTranslation('common');
+
+  const navItems = [
+    { title: t('nav.dashboard'), url: "/", icon: LayoutDashboard },
+    { title: t('nav.transactions'), url: "/transactions", icon: ArrowLeftRight },
+    { title: t('nav.investments'), url: "/investments", icon: TrendingUp },
+    { title: t('nav.goals'), url: "/goals", icon: Target },
+    { title: t('nav.accounts'), url: "/accounts", icon: Wallet },
+  ];
 
   return (
     <Sidebar>
@@ -36,16 +38,16 @@ export function AppSidebar() {
             <path d="M8 18V12L14 8L20 12V18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary" />
             <circle cx="14" cy="14" r="2" fill="currentColor" className="text-primary" />
           </svg>
-          <span className="text-base font-semibold tracking-tight" data-testid="text-app-name">FinTrack</span>
+          <span className="text-base font-semibold tracking-tight" data-testid="text-app-name">{t('common.appName')}</span>
         </div>
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Navigation</SidebarGroupLabel>
+          <SidebarGroupLabel>{t('common.navigation')}</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {navItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
+              {navItems.map((item, idx) => (
+                <SidebarMenuItem key={idx}>
                   <SidebarMenuButton
                     asChild
                     data-active={location === item.url || (item.url !== "/" && location.startsWith(item.url))}

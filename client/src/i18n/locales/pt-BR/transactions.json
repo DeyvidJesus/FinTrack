@@ -1,0 +1,32 @@
+{
+  "title": "Transações",
+  "subtitle": "Gerencie suas receitas e despesas",
+  "dialog": {
+    "newTransaction": "Nova Transação"
+  },
+  "form": {
+    "type": "Tipo",
+    "account": "Conta",
+    "description": "Descrição",
+    "amount": "Valor",
+    "date": "Data",
+    "category": "Categoria",
+    "notes": "Observações",
+    "typeIncome": "Receita",
+    "typeExpense": "Despesa",
+    "placeholderDescription": "ex: Mercado",
+    "placeholderAmount": "0,00",
+    "placeholderSelect": "Selecionar",
+    "placeholderOptional": "Opcional"
+  },
+  "messages": {
+    "added": "Transação adicionada",
+    "deleted": "Transação excluída",
+    "failedToAdd": "Falha ao adicionar transação",
+    "createAccountFirst": "Crie uma conta primeiro para que esta transação tenha um destino."
+  },
+  "empty": {
+    "noAccount": "Crie uma conta antes de adicionar transações.",
+    "noTransactions": "Nenhuma transação ainda. Adicione a primeira acima."
+  }
+}

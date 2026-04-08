@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -25,6 +26,7 @@ export default function Dashboard() {
   const { data: stats, isLoading } = useQuery<DashboardStats>({
     queryKey: ["/api/stats"],
   });
+  const { t } = useTranslation('dashboard');
 
   if (isLoading) {
     return (
@@ -45,16 +47,16 @@ export default function Dashboard() {
   return (
     <div className="p-6 space-y-6 overflow-y-auto h-full">
       <div>
-        <h1 className="text-xl font-semibold tracking-tight" data-testid="text-dashboard-title">Dashboard</h1>
-        <p className="text-sm text-muted-foreground mt-1">Your financial overview</p>
+        <h1 className="text-xl font-semibold tracking-tight" data-testid="text-dashboard-title">{t('title')}</h1>
+        <p className="text-sm text-muted-foreground mt-1">{t('subtitle')}</p>
       </div>
 
       {!hasData && (
         <Card className="border-dashed">
           <CardContent className="p-6">
-            <p className="text-sm font-medium">Start by adding an account.</p>
+            <p className="text-sm font-medium">{t('emptyState.title')}</p>
             <p className="mt-1 text-sm text-muted-foreground">
-              FinTrack is ready to use now, but you&apos;ll need at least one account before transactions, goals, and investments become meaningful.
+              {t('emptyState.description')}
             </p>
           </CardContent>
         </Card>
@@ -65,7 +67,7 @@ export default function Dashboard() {
         <Card>
           <CardContent className="p-5">
             <div className="flex items-center justify-between gap-1">
-              <p className="text-sm font-medium text-muted-foreground">Personal Balance</p>
+              <p className="text-sm font-medium text-muted-foreground">{t('kpi.personalBalance')}</p>
               <User className="w-4 h-4 text-muted-foreground" />
             </div>
             <p className="text-xl font-semibold mt-2 tabular-nums" data-testid="text-personal-balance">
@@ -77,7 +79,7 @@ export default function Dashboard() {
         <Card>
           <CardContent className="p-5">
             <div className="flex items-center justify-between gap-1">
-              <p className="text-sm font-medium text-muted-foreground">Company Balance</p>
+              <p className="text-sm font-medium text-muted-foreground">{t('kpi.companyBalance')}</p>
               <Building2 className="w-4 h-4 text-muted-foreground" />
             </div>
             <p className="text-xl font-semibold mt-2 tabular-nums" data-testid="text-company-balance">
@@ -89,7 +91,7 @@ export default function Dashboard() {
         <Card>
           <CardContent className="p-5">
             <div className="flex items-center justify-between gap-1">
-              <p className="text-sm font-medium text-muted-foreground">Month Income</p>
+              <p className="text-sm font-medium text-muted-foreground">{t('kpi.monthIncome')}</p>
               <ArrowUpRight className="w-4 h-4 text-emerald-500" />
             </div>
             <p className="text-xl font-semibold mt-2 tabular-nums text-emerald-600 dark:text-emerald-400" data-testid="text-month-income">
@@ -101,7 +103,7 @@ export default function Dashboard() {
         <Card>
           <CardContent className="p-5">
             <div className="flex items-center justify-between gap-1">
-              <p className="text-sm font-medium text-muted-foreground">Month Expenses</p>
+              <p className="text-sm font-medium text-muted-foreground">{t('kpi.monthExpenses')}</p>
               <ArrowDownRight className="w-4 h-4 text-red-500" />
             </div>
             <p className="text-xl font-semibold mt-2 tabular-nums text-red-600 dark:text-red-400" data-testid="text-month-expense">
@@ -120,14 +122,14 @@ export default function Dashboard() {
                 <TrendingUp className="w-5 h-5 text-primary" />
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Investment Portfolio</p>
+                <p className="text-sm text-muted-foreground">{t('investment.title')}</p>
                 <p className="text-lg font-semibold tabular-nums" data-testid="text-investment-value">
                   {formatCurrency(stats.totalInvestmentValue)}
                 </p>
               </div>
             </div>
             <Badge variant={stats.investmentReturn >= 0 ? "default" : "destructive"}>
-              {stats.investmentReturn >= 0 ? "+" : ""}{stats.investmentReturn.toFixed(1)}% return
+              {stats.investmentReturn >= 0 ? "+" : ""}{stats.investmentReturn.toFixed(1)}{t('investment.return')}
             </Badge>
           </div>
         </CardContent>
@@ -138,7 +140,7 @@ export default function Dashboard() {
         {/* Monthly Trend */}
         <Card className="lg:col-span-2">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Income vs Expenses</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('charts.incomeVsExpenses')}</CardTitle>
           </CardHeader>
           <CardContent className="pt-0">
             {stats.monthlyTrend.some(m => m.income > 0 || m.expense > 0) ? (
@@ -156,13 +158,13 @@ export default function Dashboard() {
                     }}
                     formatter={(value: number) => formatCurrency(value)}
                   />
-                  <Bar dataKey="income" fill="hsl(160, 84%, 30%)" radius={[4, 4, 0, 0]} name="Income" />
-                  <Bar dataKey="expense" fill="hsl(0, 72%, 51%)" radius={[4, 4, 0, 0]} name="Expenses" />
+                  <Bar dataKey="income" fill="hsl(160, 84%, 30%)" radius={[4, 4, 0, 0]} name={t('charts.income')} />
+                  <Bar dataKey="expense" fill="hsl(0, 72%, 51%)" radius={[4, 4, 0, 0]} name={t('charts.expenses')} />
                 </BarChart>
               </ResponsiveContainer>
             ) : (
               <div className="flex items-center justify-center h-[260px] text-sm text-muted-foreground">
-                Add transactions to see trends
+                {t('charts.noTransactions')}
               </div>
             )}
           </CardContent>
@@ -171,7 +173,7 @@ export default function Dashboard() {
         {/* Category Breakdown */}
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Spending by Category</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('charts.spendingByCategory')}</CardTitle>
           </CardHeader>
           <CardContent className="pt-0">
             {stats.categoryBreakdown.length > 0 ? (
@@ -208,7 +210,7 @@ export default function Dashboard() {
               </div>
             ) : (
               <div className="flex items-center justify-center h-[260px] text-sm text-muted-foreground">
-                No expenses this month
+                {t('charts.noExpenses')}
               </div>
             )}
           </CardContent>
@@ -218,7 +220,7 @@ export default function Dashboard() {
       {/* Recent Transactions */}
       <Card>
         <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-medium">Recent Transactions</CardTitle>
+          <CardTitle className="text-sm font-medium">{t('recentTransactions.title')}</CardTitle>
         </CardHeader>
         <CardContent className="pt-0">
           {stats.recentTransactions.length > 0 ? (
@@ -245,7 +247,7 @@ export default function Dashboard() {
               ))}
             </div>
           ) : (
-            <p className="text-sm text-muted-foreground py-6 text-center">No transactions yet</p>
+            <p className="text-sm text-muted-foreground py-6 text-center">{t('recentTransactions.empty')}</p>
           )}
         </CardContent>
       </Card>

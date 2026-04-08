@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,6 +20,7 @@ export default function Goals() {
   const [updateDialog, setUpdateDialog] = useState<Goal | null>(null);
   const [updateAmount, setUpdateAmount] = useState("");
   const { toast } = useToast();
+  const { t } = useTranslation(['goals', 'common']);
 
   const { data: goals = [], isLoading } = useQuery<Goal[]>({ queryKey: ["/api/goals"] });
   const { data: accounts = [] } = useQuery<Account[]>({ queryKey: ["/api/accounts"] });
@@ -47,7 +49,7 @@ export default function Goals() {
       queryClient.invalidateQueries({ queryKey: ["/api/goals"] });
       setDialogOpen(false);
       setForm({ name: "", targetAmount: "", currentAmount: "0", deadline: "", accountId: "" });
-      toast({ title: "Goal created" });
+      toast({ title: t('goals:messages.created') });
     },
   });
 
@@ -59,7 +61,7 @@ export default function Goals() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/goals"] });
       setUpdateDialog(null);
-      toast({ title: "Goal updated" });
+      toast({ title: t('goals:messages.updated') });
     },
   });
 
@@ -69,7 +71,7 @@ export default function Goals() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/goals"] });
-      toast({ title: "Goal deleted" });
+      toast({ title: t('goals:messages.deleted') });
     },
   });
 
@@ -79,44 +81,67 @@ export default function Goals() {
     <div className="p-6 space-y-6 overflow-y-auto h-full">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl font-semibold tracking-tight" data-testid="text-goals-title">Goals</h1>
-          <p className="text-sm text-muted-foreground mt-1">Track progress toward financial targets</p>
+          <h1 className="text-xl font-semibold tracking-tight" data-testid="text-goals-title">
+            {t('goals:title')}
+          </h1>
+          <p className="text-sm text-muted-foreground mt-1">{t('goals:subtitle')}</p>
         </div>
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger asChild>
             <Button data-testid="button-add-goal" disabled={!hasAccounts}>
-              <Plus className="w-4 h-4 mr-1" /> Add Goal
+              <Plus className="w-4 h-4 mr-1" /> {t('common:actions.add')} Goal
             </Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>New Goal</DialogTitle>
+              <DialogTitle>{t('goals:dialog.newGoal')}</DialogTitle>
             </DialogHeader>
             {!hasAccounts && (
               <p className="mt-2 text-sm text-muted-foreground">
-                Create an account first so you can attach each goal to the right bucket.
+                {t('goals:messages.createAccountFirst')}
               </p>
             )}
             <div className="space-y-4 mt-2">
               <div className="space-y-1.5">
-                <Label>Goal Name</Label>
-                <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="e.g. Emergency Fund" data-testid="input-goal-name" />
+                <Label>{t('goals:form.goalName')}</Label>
+                <Input
+                  value={form.name}
+                  onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  placeholder={t('goals:form.placeholderName')}
+                  data-testid="input-goal-name"
+                />
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1.5">
-                  <Label>Target Amount</Label>
-                  <Input type="number" step="0.01" value={form.targetAmount} onChange={(e) => setForm({ ...form, targetAmount: e.target.value })} placeholder="0.00" data-testid="input-goal-target" />
+                  <Label>{t('goals:form.targetAmount')}</Label>
+                  <Input
+                    type="number"
+                    step="0.01"
+                    value={form.targetAmount}
+                    onChange={(e) => setForm({ ...form, targetAmount: e.target.value })}
+                    placeholder={t('goals:form.placeholderAmount')}
+                    data-testid="input-goal-target"
+                  />
                 </div>
                 <div className="space-y-1.5">
-                  <Label>Current Amount</Label>
-                  <Input type="number" step="0.01" value={form.currentAmount} onChange={(e) => setForm({ ...form, currentAmount: e.target.value })} placeholder="0.00" data-testid="input-goal-current" />
+                  <Label>{t('goals:form.currentAmount')}</Label>
+                  <Input
+                    type="number"
+                    step="0.01"
+                    value={form.currentAmount}
+                    onChange={(e) => setForm({ ...form, currentAmount: e.target.value })}
+                    placeholder={t('goals:form.placeholderAmount')}
+                    data-testid="input-goal-current"
+                  />
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1.5">
-                  <Label>Account</Label>
+                  <Label>{t('goals:form.account')}</Label>
                   <Select value={form.accountId} onValueChange={(v) => setForm({ ...form, accountId: v })}>
-                    <SelectTrigger data-testid="select-goal-account"><SelectValue placeholder="Select" /></SelectTrigger>
+                    <SelectTrigger data-testid="select-goal-account">
+                      <SelectValue placeholder={t('goals:form.placeholderSelect')} />
+                    </SelectTrigger>
                     <SelectContent>
                       {accounts.map((a) => (
                         <SelectItem key={a.id} value={String(a.id)}>{a.name}</SelectItem>
@@ -125,8 +150,13 @@ export default function Goals() {
                   </Select>
                 </div>
                 <div className="space-y-1.5">
-                  <Label>Deadline</Label>
-                  <Input type="date" value={form.deadline} onChange={(e) => setForm({ ...form, deadline: e.target.value })} data-testid="input-goal-deadline" />
+                  <Label>{t('goals:form.deadline')}</Label>
+                  <Input
+                    type="date"
+                    value={form.deadline}
+                    onChange={(e) => setForm({ ...form, deadline: e.target.value })}
+                    data-testid="input-goal-deadline"
+                  />
                 </div>
               </div>
               <Button
@@ -135,7 +165,7 @@ export default function Goals() {
                 disabled={!form.name || !form.targetAmount || !form.accountId || createMutation.isPending}
                 data-testid="button-submit-goal"
               >
-                {createMutation.isPending ? "Creating..." : "Create Goal"}
+                {createMutation.isPending ? t('common:status.creating') : t('common:actions.create') + ' Goal'}
               </Button>
             </div>
           </DialogContent>
@@ -146,11 +176,11 @@ export default function Goals() {
       <Dialog open={!!updateDialog} onOpenChange={(open) => { if (!open) setUpdateDialog(null); }}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Update Progress</DialogTitle>
+            <DialogTitle>{t('goals:dialog.updateProgress')}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 mt-2">
             <div className="space-y-1.5">
-              <Label>Current Amount</Label>
+              <Label>{t('goals:form.currentAmount')}</Label>
               <Input
                 type="number"
                 step="0.01"
@@ -165,7 +195,7 @@ export default function Goals() {
               disabled={updateMutation.isPending}
               data-testid="button-update-goal"
             >
-              Update
+              {t('common:actions.update')}
             </Button>
           </div>
         </DialogContent>
@@ -174,7 +204,7 @@ export default function Goals() {
       {!hasAccounts ? (
         <Card>
           <CardContent className="py-12 text-center">
-            <p className="text-sm text-muted-foreground">Create an account before setting financial goals.</p>
+            <p className="text-sm text-muted-foreground">{t('goals:empty.noAccount')}</p>
           </CardContent>
         </Card>
       ) : isLoading ? (
@@ -210,21 +240,30 @@ export default function Goals() {
                         }}
                         data-testid={`button-edit-goal-${goal.id}`}
                       >
-                        Update
+                        {t('common:actions.update')}
                       </Button>
-                      <Button size="icon" variant="ghost" onClick={() => deleteMutation.mutate(goal.id)} data-testid={`button-delete-goal-${goal.id}`}>
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        onClick={() => deleteMutation.mutate(goal.id)}
+                        data-testid={`button-delete-goal-${goal.id}`}
+                      >
                         <Trash2 className="w-3.5 h-3.5 text-muted-foreground" />
                       </Button>
                     </div>
                   </div>
                   <div className="mt-4 space-y-2">
                     <div className="flex items-center justify-between text-xs text-muted-foreground">
-                      <span className="tabular-nums">{formatCurrency(goal.currentAmount)} of {formatCurrency(goal.targetAmount)}</span>
+                      <span className="tabular-nums">
+                        {formatCurrency(goal.currentAmount)} {t('common:common.of')} {formatCurrency(goal.targetAmount)}
+                      </span>
                       <span className="tabular-nums">{pct.toFixed(0)}%</span>
                     </div>
                     <Progress value={pct} className="h-2" />
                     {goal.deadline && (
-                      <p className="text-xs text-muted-foreground">Deadline: {formatDate(goal.deadline)}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {t('goals:deadline')} {formatDate(goal.deadline)}
+                      </p>
                     )}
                   </div>
                 </CardContent>
@@ -235,7 +274,7 @@ export default function Goals() {
       ) : (
         <Card>
           <CardContent className="py-12 text-center">
-            <p className="text-sm text-muted-foreground">No goals yet. Set your first financial target.</p>
+            <p className="text-sm text-muted-foreground">{t('goals:empty.noGoals')}</p>
           </CardContent>
         </Card>
       )}

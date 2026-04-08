@@ -1,0 +1,12 @@
+{
+  "notFound": {
+    "title": "404 Page Not Found",
+    "message": "Did you forget to add the page to the router?"
+  },
+  "required": "This field is required",
+  "invalidEmail": "Invalid email address",
+  "invalidNumber": "Must be a valid number",
+  "positiveNumber": "Must be a positive number",
+  "minLength": "Must be at least {{min}} characters",
+  "maxLength": "Must be at most {{max}} characters"
+}

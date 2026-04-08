@@ -1,0 +1,41 @@
+{
+  "title": "Investments",
+  "subtitle": "Track your portfolio performance",
+  "dialog": {
+    "newInvestment": "New Investment"
+  },
+  "types": {
+    "stocks": "Stocks",
+    "crypto": "Crypto",
+    "bonds": "Bonds",
+    "realEstate": "Real Estate",
+    "other": "Other"
+  },
+  "form": {
+    "type": "Type",
+    "account": "Account",
+    "name": "Name",
+    "costBasis": "Cost Basis",
+    "currentValue": "Current Value",
+    "purchaseDate": "Purchase Date",
+    "placeholderName": "e.g. AAPL, Bitcoin",
+    "placeholderAmount": "0.00",
+    "placeholderSelect": "Select"
+  },
+  "messages": {
+    "added": "Investment added",
+    "removed": "Investment removed",
+    "failedToAdd": "Failed to add investment",
+    "createAccountFirst": "Create an account first so this investment can be assigned correctly."
+  },
+  "summary": {
+    "totalInvested": "Total Invested",
+    "currentValue": "Current Value",
+    "totalReturn": "Total Return"
+  },
+  "empty": {
+    "noAccount": "Create an account before tracking investments.",
+    "noInvestments": "No investments yet. Start building your portfolio."
+  },
+  "bought": "Bought"
+}

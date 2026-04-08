@@ -1,0 +1,41 @@
+{
+  "title": "Inversiones",
+  "subtitle": "Siga el rendimiento de su cartera",
+  "dialog": {
+    "newInvestment": "Nueva Inversión"
+  },
+  "types": {
+    "stocks": "Acciones",
+    "crypto": "Criptomonedas",
+    "bonds": "Bonos",
+    "realEstate": "Bienes Raíces",
+    "other": "Otros"
+  },
+  "form": {
+    "type": "Tipo",
+    "account": "Cuenta",
+    "name": "Nombre",
+    "costBasis": "Costo de Adquisición",
+    "currentValue": "Valor Actual",
+    "purchaseDate": "Fecha de Compra",
+    "placeholderName": "ej: AAPL, Bitcoin",
+    "placeholderAmount": "0.00",
+    "placeholderSelect": "Seleccionar"
+  },
+  "messages": {
+    "added": "Inversión agregada",
+    "removed": "Inversión eliminada",
+    "failedToAdd": "Error al agregar inversión",
+    "createAccountFirst": "Cree una cuenta primero para que esta inversión pueda asignarse correctamente."
+  },
+  "summary": {
+    "totalInvested": "Total Invertido",
+    "currentValue": "Valor Actual",
+    "totalReturn": "Retorno Total"
+  },
+  "empty": {
+    "noAccount": "Cree una cuenta antes de rastrear inversiones.",
+    "noInvestments": "Aún no hay inversiones. Comience a construir su cartera."
+  },
+  "bought": "Comprado el"
+}

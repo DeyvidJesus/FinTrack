@@ -1,0 +1,32 @@
+{
+  "title": "Transacciones",
+  "subtitle": "Administre sus ingresos y gastos",
+  "dialog": {
+    "newTransaction": "Nueva Transacción"
+  },
+  "form": {
+    "type": "Tipo",
+    "account": "Cuenta",
+    "description": "Descripción",
+    "amount": "Monto",
+    "date": "Fecha",
+    "category": "Categoría",
+    "notes": "Notas",
+    "typeIncome": "Ingreso",
+    "typeExpense": "Gasto",
+    "placeholderDescription": "ej: Supermercado",
+    "placeholderAmount": "0.00",
+    "placeholderSelect": "Seleccionar",
+    "placeholderOptional": "Opcional"
+  },
+  "messages": {
+    "added": "Transacción agregada",
+    "deleted": "Transacción eliminada",
+    "failedToAdd": "Error al agregar transacción",
+    "createAccountFirst": "Cree una cuenta primero para que esta transacción tenga un destino."
+  },
+  "empty": {
+    "noAccount": "Cree una cuenta antes de agregar transacciones.",
+    "noTransactions": "Aún no hay transacciones. Agregue la primera arriba."
+  }
+}

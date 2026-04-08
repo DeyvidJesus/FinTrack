@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -21,6 +22,7 @@ export default function Accounts() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [tab, setTab] = useState("all");
   const { toast } = useToast();
+  const { t } = useTranslation(['accounts', 'common']);
 
   const { data: accounts = [], isLoading } = useQuery<Account[]>({ queryKey: ["/api/accounts"] });
 
@@ -45,7 +47,7 @@ export default function Accounts() {
       queryClient.invalidateQueries({ queryKey: ["/api/stats"] });
       setDialogOpen(false);
       setForm({ name: "", type: "personal", currency: "BRL", balance: "0", color: COLORS[Math.floor(Math.random() * COLORS.length)] });
-      toast({ title: "Account created" });
+      toast({ title: t('accounts:messages.created') });
     },
   });
 
@@ -56,7 +58,7 @@ export default function Accounts() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/accounts"] });
       queryClient.invalidateQueries({ queryKey: ["/api/stats"] });
-      toast({ title: "Account deleted" });
+      toast({ title: t('accounts:messages.deleted') });
     },
   });
 
@@ -69,53 +71,67 @@ export default function Accounts() {
     <div className="p-6 space-y-6 overflow-y-auto h-full">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl font-semibold tracking-tight" data-testid="text-accounts-title">Accounts</h1>
-          <p className="text-sm text-muted-foreground mt-1">Manage personal and company accounts</p>
+          <h1 className="text-xl font-semibold tracking-tight" data-testid="text-accounts-title">
+            {t('accounts:title')}
+          </h1>
+          <p className="text-sm text-muted-foreground mt-1">{t('accounts:subtitle')}</p>
         </div>
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger asChild>
             <Button data-testid="button-add-account">
-              <Plus className="w-4 h-4 mr-1" /> Add Account
+              <Plus className="w-4 h-4 mr-1" /> {t('common:actions.add')} {t('common:common.account')}
             </Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>New Account</DialogTitle>
+              <DialogTitle>{t('accounts:dialog.newAccount')}</DialogTitle>
             </DialogHeader>
             <div className="space-y-4 mt-2">
               <div className="space-y-1.5">
-                <Label>Account Name</Label>
-                <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="e.g. Main Checking" data-testid="input-account-name" />
+                <Label>{t('accounts:form.accountName')}</Label>
+                <Input
+                  value={form.name}
+                  onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  placeholder={t('accounts:form.placeholderName')}
+                  data-testid="input-account-name"
+                />
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1.5">
-                  <Label>Type</Label>
+                  <Label>{t('accounts:form.type')}</Label>
                   <Select value={form.type} onValueChange={(v) => setForm({ ...form, type: v })}>
                     <SelectTrigger data-testid="select-account-type"><SelectValue /></SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="personal">Personal</SelectItem>
-                      <SelectItem value="company">Company</SelectItem>
+                      <SelectItem value="personal">{t('accounts:types.personal')}</SelectItem>
+                      <SelectItem value="company">{t('accounts:types.company')}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 <div className="space-y-1.5">
-                  <Label>Currency</Label>
+                  <Label>{t('accounts:form.currency')}</Label>
                   <Select value={form.currency} onValueChange={(v) => setForm({ ...form, currency: v })}>
                     <SelectTrigger data-testid="select-account-currency"><SelectValue /></SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="BRL">BRL</SelectItem>
-                      <SelectItem value="USD">USD</SelectItem>
-                      <SelectItem value="EUR">EUR</SelectItem>
+                      <SelectItem value="BRL">{t('accounts:currencies.BRL')}</SelectItem>
+                      <SelectItem value="USD">{t('accounts:currencies.USD')}</SelectItem>
+                      <SelectItem value="EUR">{t('accounts:currencies.EUR')}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
               </div>
               <div className="space-y-1.5">
-                <Label>Starting Balance</Label>
-                <Input type="number" step="0.01" value={form.balance} onChange={(e) => setForm({ ...form, balance: e.target.value })} placeholder="0.00" data-testid="input-account-balance" />
+                <Label>{t('accounts:form.startingBalance')}</Label>
+                <Input
+                  type="number"
+                  step="0.01"
+                  value={form.balance}
+                  onChange={(e) => setForm({ ...form, balance: e.target.value })}
+                  placeholder={t('accounts:form.placeholderAmount')}
+                  data-testid="input-account-balance"
+                />
               </div>
               <div className="space-y-1.5">
-                <Label>Color</Label>
+                <Label>{t('accounts:form.color')}</Label>
                 <div className="flex gap-2 flex-wrap">
                   {COLORS.map((c) => (
                     <button
@@ -135,7 +151,7 @@ export default function Accounts() {
                 disabled={!form.name.trim() || Number.isNaN(parsedBalance) || createMutation.isPending}
                 data-testid="button-submit-account"
               >
-                {createMutation.isPending ? "Creating..." : "Create Account"}
+                {createMutation.isPending ? t('common:status.creating') : t('common:actions.create') + ' ' + t('common:common.account')}
               </Button>
             </div>
           </DialogContent>
@@ -150,8 +166,10 @@ export default function Accounts() {
               <User className="w-5 h-5 text-blue-600 dark:text-blue-400" />
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">Personal Total</p>
-              <p className="text-lg font-semibold tabular-nums" data-testid="text-personal-total">{formatCurrency(personalTotal)}</p>
+              <p className="text-sm text-muted-foreground">{t('accounts:summary.personalTotal')}</p>
+              <p className="text-lg font-semibold tabular-nums" data-testid="text-personal-total">
+                {formatCurrency(personalTotal)}
+              </p>
             </div>
           </CardContent>
         </Card>
@@ -161,8 +179,10 @@ export default function Accounts() {
               <Building2 className="w-5 h-5 text-purple-600 dark:text-purple-400" />
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">Company Total</p>
-              <p className="text-lg font-semibold tabular-nums" data-testid="text-company-total">{formatCurrency(companyTotal)}</p>
+              <p className="text-sm text-muted-foreground">{t('accounts:summary.companyTotal')}</p>
+              <p className="text-lg font-semibold tabular-nums" data-testid="text-company-total">
+                {formatCurrency(companyTotal)}
+              </p>
             </div>
           </CardContent>
         </Card>
@@ -171,9 +191,9 @@ export default function Accounts() {
       {/* Tabs */}
       <Tabs value={tab} onValueChange={setTab}>
         <TabsList>
-          <TabsTrigger value="all" data-testid="tab-all">All</TabsTrigger>
-          <TabsTrigger value="personal" data-testid="tab-personal">Personal</TabsTrigger>
-          <TabsTrigger value="company" data-testid="tab-company">Company</TabsTrigger>
+          <TabsTrigger value="all" data-testid="tab-all">{t('accounts:tabs.all')}</TabsTrigger>
+          <TabsTrigger value="personal" data-testid="tab-personal">{t('accounts:tabs.personal')}</TabsTrigger>
+          <TabsTrigger value="company" data-testid="tab-company">{t('accounts:tabs.company')}</TabsTrigger>
         </TabsList>
         <TabsContent value={tab} className="mt-4">
           {isLoading ? (
@@ -192,15 +212,22 @@ export default function Accounts() {
                           <p className="text-sm font-medium">{account.name}</p>
                           <div className="flex items-center gap-1.5 mt-0.5">
                             <Badge variant="secondary" className="text-[10px] px-1.5 py-0">
-                              {account.type === "company" ? "Company" : "Personal"}
+                              {t(`accounts:types.${account.type}`)}
                             </Badge>
                             <span className="text-xs text-muted-foreground">{account.currency}</span>
                           </div>
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
-                        <p className="text-sm font-semibold tabular-nums">{formatCurrency(account.balance, account.currency)}</p>
-                        <Button size="icon" variant="ghost" onClick={() => deleteMutation.mutate(account.id)} data-testid={`button-delete-account-${account.id}`}>
+                        <p className="text-sm font-semibold tabular-nums">
+                          {formatCurrency(account.balance, account.currency)}
+                        </p>
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          onClick={() => deleteMutation.mutate(account.id)}
+                          data-testid={`button-delete-account-${account.id}`}
+                        >
                           <Trash2 className="w-3.5 h-3.5 text-muted-foreground" />
                         </Button>
                       </div>
@@ -212,7 +239,7 @@ export default function Accounts() {
           ) : (
             <Card>
               <CardContent className="py-12 text-center">
-                <p className="text-sm text-muted-foreground">No accounts found. Create one to get started.</p>
+                <p className="text-sm text-muted-foreground">{t('accounts:empty')}</p>
               </CardContent>
             </Card>
           )}

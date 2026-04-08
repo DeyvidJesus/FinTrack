@@ -1,0 +1,39 @@
+{
+  "title": "Cuentas",
+  "subtitle": "Administre cuentas personales y empresariales",
+  "dialog": {
+    "newAccount": "Nueva Cuenta"
+  },
+  "form": {
+    "accountName": "Nombre de la Cuenta",
+    "type": "Tipo",
+    "currency": "Moneda",
+    "startingBalance": "Saldo Inicial",
+    "color": "Color",
+    "placeholderName": "ej: Cuenta Corriente Principal",
+    "placeholderAmount": "0.00"
+  },
+  "types": {
+    "personal": "Personal",
+    "company": "Empresa"
+  },
+  "currencies": {
+    "BRL": "BRL",
+    "USD": "USD",
+    "EUR": "EUR"
+  },
+  "messages": {
+    "created": "Cuenta creada",
+    "deleted": "Cuenta eliminada"
+  },
+  "summary": {
+    "personalTotal": "Total Personal",
+    "companyTotal": "Total de la Empresa"
+  },
+  "tabs": {
+    "all": "Todas",
+    "personal": "Personal",
+    "company": "Empresa"
+  },
+  "empty": "No se encontraron cuentas. Cree una para comenzar."
+}

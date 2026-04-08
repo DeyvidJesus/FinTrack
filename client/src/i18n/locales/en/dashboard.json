@@ -1,0 +1,30 @@
+{
+  "title": "Dashboard",
+  "subtitle": "Your financial overview",
+  "emptyState": {
+    "title": "Start by adding an account.",
+    "description": "FinTrack is ready to use now, but you'll need at least one account before transactions, goals, and investments become meaningful."
+  },
+  "kpi": {
+    "personalBalance": "Personal Balance",
+    "companyBalance": "Company Balance",
+    "monthIncome": "Month Income",
+    "monthExpenses": "Month Expenses"
+  },
+  "investment": {
+    "title": "Investment Portfolio",
+    "return": "% return"
+  },
+  "charts": {
+    "incomeVsExpenses": "Income vs Expenses",
+    "spendingByCategory": "Spending by Category",
+    "income": "Income",
+    "expenses": "Expenses",
+    "noTransactions": "Add transactions to see trends",
+    "noExpenses": "No expenses this month"
+  },
+  "recentTransactions": {
+    "title": "Recent Transactions",
+    "empty": "No transactions yet"
+  }
+}

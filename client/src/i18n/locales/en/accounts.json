@@ -1,0 +1,39 @@
+{
+  "title": "Accounts",
+  "subtitle": "Manage personal and company accounts",
+  "dialog": {
+    "newAccount": "New Account"
+  },
+  "form": {
+    "accountName": "Account Name",
+    "type": "Type",
+    "currency": "Currency",
+    "startingBalance": "Starting Balance",
+    "color": "Color",
+    "placeholderName": "e.g. Main Checking",
+    "placeholderAmount": "0.00"
+  },
+  "types": {
+    "personal": "Personal",
+    "company": "Company"
+  },
+  "currencies": {
+    "BRL": "BRL",
+    "USD": "USD",
+    "EUR": "EUR"
+  },
+  "messages": {
+    "created": "Account created",
+    "deleted": "Account deleted"
+  },
+  "summary": {
+    "personalTotal": "Personal Total",
+    "companyTotal": "Company Total"
+  },
+  "tabs": {
+    "all": "All",
+    "personal": "Personal",
+    "company": "Company"
+  },
+  "empty": "No accounts found. Create one to get started."
+}

@@ -1,0 +1,29 @@
+{
+  "title": "Metas",
+  "subtitle": "Siga el progreso hacia sus objetivos financieros",
+  "dialog": {
+    "newGoal": "Nueva Meta",
+    "updateProgress": "Actualizar Progreso"
+  },
+  "form": {
+    "goalName": "Nombre de la Meta",
+    "targetAmount": "Monto Objetivo",
+    "currentAmount": "Monto Actual",
+    "account": "Cuenta",
+    "deadline": "Plazo",
+    "placeholderName": "ej: Fondo de Emergencia",
+    "placeholderAmount": "0.00",
+    "placeholderSelect": "Seleccionar"
+  },
+  "messages": {
+    "created": "Meta creada",
+    "updated": "Meta actualizada",
+    "deleted": "Meta eliminada",
+    "createAccountFirst": "Cree una cuenta primero para poder vincular cada meta al lugar correcto."
+  },
+  "empty": {
+    "noAccount": "Cree una cuenta antes de establecer metas financieras.",
+    "noGoals": "Aún no hay metas. Establezca su primer objetivo financiero."
+  },
+  "deadline": "Plazo:"
+}

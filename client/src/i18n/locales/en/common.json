@@ -1,0 +1,47 @@
+{
+  "nav": {
+    "dashboard": "Dashboard",
+    "transactions": "Transactions",
+    "investments": "Investments",
+    "goals": "Goals",
+    "accounts": "Accounts"
+  },
+  "actions": {
+    "add": "Add",
+    "create": "Create",
+    "update": "Update",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "save": "Save",
+    "close": "Close",
+    "edit": "Edit"
+  },
+  "status": {
+    "loading": "Loading...",
+    "creating": "Creating...",
+    "adding": "Adding...",
+    "updating": "Updating...",
+    "deleting": "Deleting..."
+  },
+  "common": {
+    "appName": "FinTrack",
+    "navigation": "Navigation",
+    "personal": "Personal",
+    "company": "Company",
+    "type": "Type",
+    "account": "Account",
+    "date": "Date",
+    "amount": "Amount",
+    "name": "Name",
+    "select": "Select",
+    "optional": "Optional",
+    "of": "of",
+    "allAccounts": "All Accounts",
+    "noAccountsYet": "No accounts yet",
+    "noAccountsAvailable": "No accounts available"
+  },
+  "messages": {
+    "error": "Error",
+    "success": "Success"
+  }
+}

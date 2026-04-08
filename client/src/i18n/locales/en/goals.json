@@ -1,0 +1,29 @@
+{
+  "title": "Goals",
+  "subtitle": "Track progress toward financial targets",
+  "dialog": {
+    "newGoal": "New Goal",
+    "updateProgress": "Update Progress"
+  },
+  "form": {
+    "goalName": "Goal Name",
+    "targetAmount": "Target Amount",
+    "currentAmount": "Current Amount",
+    "account": "Account",
+    "deadline": "Deadline",
+    "placeholderName": "e.g. Emergency Fund",
+    "placeholderAmount": "0.00",
+    "placeholderSelect": "Select"
+  },
+  "messages": {
+    "created": "Goal created",
+    "updated": "Goal updated",
+    "deleted": "Goal deleted",
+    "createAccountFirst": "Create an account first so you can attach each goal to the right bucket."
+  },
+  "empty": {
+    "noAccount": "Create an account before setting financial goals.",
+    "noGoals": "No goals yet. Set your first financial target."
+  },
+  "deadline": "Deadline:"
+}

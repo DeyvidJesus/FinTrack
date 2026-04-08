@@ -1,0 +1,12 @@
+{
+  "notFound": {
+    "title": "404 Página Não Encontrada",
+    "message": "Você esqueceu de adicionar a página ao roteador?"
+  },
+  "required": "Este campo é obrigatório",
+  "invalidEmail": "Endereço de e-mail inválido",
+  "invalidNumber": "Deve ser um número válido",
+  "positiveNumber": "Deve ser um número positivo",
+  "minLength": "Deve ter pelo menos {{min}} caracteres",
+  "maxLength": "Deve ter no máximo {{max}} caracteres"
+}

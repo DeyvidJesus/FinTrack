@@ -1,0 +1,41 @@
+{
+  "title": "Investimentos",
+  "subtitle": "Acompanhe o desempenho do seu portfólio",
+  "dialog": {
+    "newInvestment": "Novo Investimento"
+  },
+  "types": {
+    "stocks": "Ações",
+    "crypto": "Criptomoedas",
+    "bonds": "Títulos",
+    "realEstate": "Imóveis",
+    "other": "Outros"
+  },
+  "form": {
+    "type": "Tipo",
+    "account": "Conta",
+    "name": "Nome",
+    "costBasis": "Custo de Aquisição",
+    "currentValue": "Valor Atual",
+    "purchaseDate": "Data da Compra",
+    "placeholderName": "ex: PETR4, Bitcoin",
+    "placeholderAmount": "0,00",
+    "placeholderSelect": "Selecionar"
+  },
+  "messages": {
+    "added": "Investimento adicionado",
+    "removed": "Investimento removido",
+    "failedToAdd": "Falha ao adicionar investimento",
+    "createAccountFirst": "Crie uma conta primeiro para que este investimento possa ser atribuído corretamente."
+  },
+  "summary": {
+    "totalInvested": "Total Investido",
+    "currentValue": "Valor Atual",
+    "totalReturn": "Retorno Total"
+  },
+  "empty": {
+    "noAccount": "Crie uma conta antes de rastrear investimentos.",
+    "noInvestments": "Nenhum investimento ainda. Comece a construir seu portfólio."
+  },
+  "bought": "Comprado em"
+}

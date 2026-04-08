@@ -1,0 +1,30 @@
+{
+  "title": "Panel",
+  "subtitle": "Su resumen financiero",
+  "emptyState": {
+    "title": "Comience agregando una cuenta.",
+    "description": "FinTrack está listo para usar ahora, pero necesitará al menos una cuenta antes de que las transacciones, metas e inversiones sean significativas."
+  },
+  "kpi": {
+    "personalBalance": "Saldo Personal",
+    "companyBalance": "Saldo de la Empresa",
+    "monthIncome": "Ingresos del Mes",
+    "monthExpenses": "Gastos del Mes"
+  },
+  "investment": {
+    "title": "Cartera de Inversiones",
+    "return": "% de retorno"
+  },
+  "charts": {
+    "incomeVsExpenses": "Ingresos vs Gastos",
+    "spendingByCategory": "Gastos por Categoría",
+    "income": "Ingresos",
+    "expenses": "Gastos",
+    "noTransactions": "Agregue transacciones para ver tendencias",
+    "noExpenses": "Sin gastos este mes"
+  },
+  "recentTransactions": {
+    "title": "Transacciones Recientes",
+    "empty": "Aún no hay transacciones"
+  }
+}

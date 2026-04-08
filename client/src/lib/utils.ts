@@ -1,12 +1,13 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import i18n from "@/i18n";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
 export function formatCurrency(value: number, currency = "BRL"): string {
-  const locale = currency === "BRL" ? "pt-BR" : "en-US";
+  const locale = i18n.language || "en";
 
   return new Intl.NumberFormat(locale, {
     style: "currency",
@@ -16,8 +17,9 @@ export function formatCurrency(value: number, currency = "BRL"): string {
 }
 
 export function formatDate(dateStr: string): string {
+  const locale = i18n.language || "en";
   const date = new Date(dateStr + "T00:00:00");
-  return date.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+  return date.toLocaleDateString(locale, { month: "short", day: "numeric", year: "numeric" });
 }
 
 export function getTodayISO(): string {
