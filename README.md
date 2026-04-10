@@ -122,3 +122,10 @@ O aprofundamento arquitetural esta em [docs/architecture.md](./docs/architecture
 - detalhes de build e runtime
 - decisoes arquiteturais e trade-offs
 - oportunidades de evolucao
+
+Ha tambem uma proposta de publicacao na AWS em [docs/aws-deployment.md](./docs/aws-deployment.md), cobrindo:
+
+- opcao de menor esforco com `EC2 + EBS`
+- arquitetura recomendada com `ECS Fargate + RDS`
+- limites atuais do uso de `SQLite`
+- operacao, backup, seguranca e proximos passos
