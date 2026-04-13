@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import type { Server } from "http";
 import { storage } from "./storage";
-import { insertAccountSchema, insertCategorySchema, insertTransactionSchema, insertInvestmentSchema, insertGoalSchema } from "@shared/schema";
+import { insertAccountSchema, insertCategorySchema, insertTransactionSchema, insertInvestmentSchema, insertGoalSchema, insertDailyEntrySchema, categoryConfig } from "@shared/schema";
 
 export async function registerRoutes(
   httpServer: Server,
@@ -196,6 +196,110 @@ export async function registerRoutes(
   // Seed default categories
   app.post("/api/seed", (_req, res) => {
     res.json({ seeded: storage.getCategories().length > 0 });
+  });
+
+  // === Daily Entries ===
+  app.get("/api/daily-entries", (req, res) => {
+    const accountId = Number(req.query.accountId);
+    const year = Number(req.query.year);
+    const month = Number(req.query.month);
+
+    if (!accountId || !year || !month) {
+      return res.status(400).json({ error: "accountId, year, and month are required" });
+    }
+
+    const entries = storage.getDailyEntries(accountId, year, month);
+
+    // Calculate aggregated data
+    const categories = Object.keys(categoryConfig);
+
+    // Build daily data matrix
+    const dailyData: Record<number, Record<string, number>> = {};
+    for (let day = 1; day <= 31; day++) {
+      dailyData[day] = {};
+      categories.forEach(cat => {
+        dailyData[day][cat] = 0;
+      });
+    }
+
+    // Populate with actual entries
+    entries.forEach(entry => {
+      if (dailyData[entry.day]) {
+        dailyData[entry.day][entry.category] = entry.amount;
+      }
+    });
+
+    // Calculate daily balances
+    const dailyBalances: Record<number, number> = {};
+    for (let day = 1; day <= 31; day++) {
+      const renda = dailyData[day]["renda"] || 0;
+      const despesas = categories
+        .filter(cat => cat !== "renda")
+        .reduce((sum, cat) => sum + (dailyData[day][cat] || 0), 0);
+      dailyBalances[day] = renda + despesas; // despesas já são negativas
+    }
+
+    // Calculate monthly totals
+    const monthlyTotals: Record<string, number> = {};
+    categories.forEach(cat => {
+      monthlyTotals[cat] = entries
+        .filter(e => e.category === cat)
+        .reduce((sum, e) => sum + e.amount, 0);
+    });
+
+    // Calculate percentages
+    const totalRenda = monthlyTotals["renda"] || 0;
+    const percentages: Record<string, number> = {};
+    categories.forEach(cat => {
+      if (cat !== "renda" && totalRenda !== 0) {
+        percentages[cat] = (monthlyTotals[cat] / totalRenda) * 100;
+      } else {
+        percentages[cat] = 0;
+      }
+    });
+
+    // Calculate consolidated balances
+    const saldoMes = Object.values(dailyBalances).reduce((sum, bal) => sum + bal, 0);
+
+    // For previous month balance, we'd need to query previous months
+    // For simplicity, we'll return 0 here, but this could be extended
+    const saldoMesAnterior = 0;
+    const saldoProximoMes = saldoMesAnterior + saldoMes;
+
+    res.json({
+      entries,
+      dailyData,
+      dailyBalances,
+      monthlyTotals,
+      percentages,
+      consolidation: {
+        saldoMesAnterior,
+        saldoMes,
+        saldoProximoMes
+      }
+    });
+  });
+
+  app.post("/api/daily-entries", (req, res) => {
+    const parsed = insertDailyEntrySchema.safeParse(req.body);
+    if (!parsed.success) return res.status(400).json({ error: parsed.error.message });
+
+    const entry = storage.upsertDailyEntry(
+      parsed.data.accountId,
+      parsed.data.year,
+      parsed.data.month,
+      parsed.data.day,
+      parsed.data.category,
+      parsed.data.amount,
+      parsed.data.notes
+    );
+
+    res.status(201).json(entry);
+  });
+
+  app.delete("/api/daily-entries/:id", (req, res) => {
+    storage.deleteDailyEntry(Number(req.params.id));
+    res.status(204).send();
   });
 
   return httpServer;

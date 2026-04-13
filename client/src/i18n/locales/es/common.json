@@ -2,6 +2,7 @@
   "nav": {
     "dashboard": "Panel",
     "transactions": "Transacciones",
+    "dailyEntries": "Control Diario",
     "investments": "Inversiones",
     "goals": "Metas",
     "accounts": "Cuentas"
@@ -26,6 +27,7 @@
   "common": {
     "appName": "FinTrack",
     "navigation": "Navegación",
+    "locale": "es",
     "personal": "Personal",
     "company": "Empresa",
     "type": "Tipo",

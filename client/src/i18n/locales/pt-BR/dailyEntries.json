@@ -1,0 +1,23 @@
+{
+  "title": "Controle Diário",
+  "subtitle": "Registre suas receitas e despesas diárias em uma matriz mensal",
+  "matrix": {
+    "title": "Matriz Mensal",
+    "day": "Dia",
+    "balance": "Saldo",
+    "total": "Total",
+    "percentage": "%"
+  },
+  "summary": {
+    "previousMonth": "Saldo do Mês Anterior",
+    "currentMonth": "Saldo do Mês",
+    "nextMonth": "Saldo para Próximo Mês"
+  },
+  "empty": {
+    "noAccount": "Crie uma conta para começar a registrar entradas diárias"
+  },
+  "messages": {
+    "saved": "Entrada salva com sucesso",
+    "failedToSave": "Falha ao salvar entrada"
+  }
+}

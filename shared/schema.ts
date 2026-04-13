@@ -111,3 +111,68 @@ export const insertGoalSchema = createInsertSchema(goals, {
 }).omit({ id: true });
 export type InsertGoal = z.infer<typeof insertGoalSchema>;
 export type Goal = typeof goals.$inferSelect;
+
+// Daily Entries (Monthly tracking matrix)
+const categoryNameSchema = z.enum([
+  "renda",
+  "contribuicao",
+  "impostos_taxas",
+  "moradia",
+  "alimentacao",
+  "transporte",
+  "seguros",
+  "dividas",
+  "lazer_eventos",
+  "vestuario",
+  "investimento",
+  "saude",
+  "educacao",
+  "cuidados_pessoais",
+  "comunicacao",
+  "manutencao",
+  "diversos"
+]);
+
+export const dailyEntries = sqliteTable("daily_entries", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  accountId: integer("account_id").notNull(),
+  year: integer("year").notNull(),
+  month: integer("month").notNull(), // 1-12
+  day: integer("day").notNull(), // 1-31
+  category: text("category").notNull(), // One of the category names from enum
+  amount: real("amount").notNull(), // Positive for income, negative for expenses
+  notes: text("notes"),
+});
+
+export const insertDailyEntrySchema = createInsertSchema(dailyEntries, {
+  accountId: () => z.number().int().positive("Account is required"),
+  year: () => z.number().int().min(2000).max(2100),
+  month: () => z.number().int().min(1).max(12),
+  day: () => z.number().int().min(1).max(31),
+  category: () => categoryNameSchema,
+  amount: () => z.number().finite(),
+  notes: () => z.string().trim().max(500).nullable(),
+}).omit({ id: true });
+export type InsertDailyEntry = z.infer<typeof insertDailyEntrySchema>;
+export type DailyEntry = typeof dailyEntries.$inferSelect;
+
+// Category display configuration
+export const categoryConfig = {
+  renda: { label: "Renda", type: "income" },
+  contribuicao: { label: "Contribuição", type: "expense" },
+  impostos_taxas: { label: "Impostos e Taxas", type: "expense" },
+  moradia: { label: "Moradia", type: "expense" },
+  alimentacao: { label: "Alimentação", type: "expense" },
+  transporte: { label: "Transporte", type: "expense" },
+  seguros: { label: "Seguros", type: "expense" },
+  dividas: { label: "Dívidas", type: "expense" },
+  lazer_eventos: { label: "Lazer e Eventos", type: "expense" },
+  vestuario: { label: "Vestuário", type: "expense" },
+  investimento: { label: "Investimento", type: "expense" },
+  saude: { label: "Saúde", type: "expense" },
+  educacao: { label: "Educação", type: "expense" },
+  cuidados_pessoais: { label: "Cuidados Pessoais", type: "expense" },
+  comunicacao: { label: "Comunicação", type: "expense" },
+  manutencao: { label: "Manutenção", type: "expense" },
+  diversos: { label: "Diversos", type: "expense" },
+} as const;

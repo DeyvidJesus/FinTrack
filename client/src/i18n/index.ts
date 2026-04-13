@@ -9,6 +9,7 @@ import './types';
 import commonEN from './locales/en/common.json';
 import dashboardEN from './locales/en/dashboard.json';
 import transactionsEN from './locales/en/transactions.json';
+import dailyEntriesEN from './locales/en/dailyEntries.json';
 import investmentsEN from './locales/en/investments.json';
 import goalsEN from './locales/en/goals.json';
 import accountsEN from './locales/en/accounts.json';
@@ -18,6 +19,7 @@ import validationEN from './locales/en/validation.json';
 import commonPT from './locales/pt-BR/common.json';
 import dashboardPT from './locales/pt-BR/dashboard.json';
 import transactionsPT from './locales/pt-BR/transactions.json';
+import dailyEntriesPT from './locales/pt-BR/dailyEntries.json';
 import investmentsPT from './locales/pt-BR/investments.json';
 import goalsPT from './locales/pt-BR/goals.json';
 import accountsPT from './locales/pt-BR/accounts.json';
@@ -27,6 +29,7 @@ import validationPT from './locales/pt-BR/validation.json';
 import commonES from './locales/es/common.json';
 import dashboardES from './locales/es/dashboard.json';
 import transactionsES from './locales/es/transactions.json';
+import dailyEntriesES from './locales/es/dailyEntries.json';
 import investmentsES from './locales/es/investments.json';
 import goalsES from './locales/es/goals.json';
 import accountsES from './locales/es/accounts.json';
@@ -45,6 +48,7 @@ i18n
         common: commonEN,
         dashboard: dashboardEN,
         transactions: transactionsEN,
+        dailyEntries: dailyEntriesEN,
         investments: investmentsEN,
         goals: goalsEN,
         accounts: accountsEN,
@@ -54,6 +58,7 @@ i18n
         common: commonPT,
         dashboard: dashboardPT,
         transactions: transactionsPT,
+        dailyEntries: dailyEntriesPT,
         investments: investmentsPT,
         goals: goalsPT,
         accounts: accountsPT,
@@ -63,6 +68,7 @@ i18n
         common: commonES,
         dashboard: dashboardES,
         transactions: transactionsES,
+        dailyEntries: dailyEntriesES,
         investments: investmentsES,
         goals: goalsES,
         accounts: accountsES,
@@ -71,7 +77,7 @@ i18n
     },
     fallbackLng: 'en',
     defaultNS: 'common',
-    ns: ['common', 'dashboard', 'transactions', 'investments', 'goals', 'accounts', 'validation'],
+    ns: ['common', 'dashboard', 'transactions', 'dailyEntries', 'investments', 'goals', 'accounts', 'validation'],
 
     detection: {
       order: ['localStorage', 'navigator'],

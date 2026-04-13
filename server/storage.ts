@@ -4,10 +4,11 @@ import {
   type Transaction, type InsertTransaction, transactions,
   type Investment, type InsertInvestment, investments,
   type Goal, type InsertGoal, goals,
+  type DailyEntry, type InsertDailyEntry, dailyEntries,
 } from "@shared/schema";
 import { drizzle } from "drizzle-orm/better-sqlite3";
 import Database from "better-sqlite3";
-import { eq, desc } from "drizzle-orm";
+import { eq, desc, and } from "drizzle-orm";
 
 const sqlite = new Database("data.db");
 sqlite.pragma("journal_mode = WAL");
@@ -84,6 +85,20 @@ function ensureSchema() {
       account_id INTEGER NOT NULL,
       FOREIGN KEY (account_id) REFERENCES accounts(id) ON DELETE CASCADE
     );
+
+    CREATE TABLE IF NOT EXISTS daily_entries (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      account_id INTEGER NOT NULL,
+      year INTEGER NOT NULL,
+      month INTEGER NOT NULL,
+      day INTEGER NOT NULL,
+      category TEXT NOT NULL,
+      amount REAL NOT NULL,
+      notes TEXT,
+      FOREIGN KEY (account_id) REFERENCES accounts(id) ON DELETE CASCADE
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_daily_entries_period ON daily_entries(account_id, year, month);
   `);
 }
 
@@ -142,6 +157,14 @@ export interface IStorage {
   createGoal(data: InsertGoal): Goal;
   updateGoal(id: number, data: Partial<InsertGoal>): Goal | undefined;
   deleteGoal(id: number): void;
+
+  // Daily Entries
+  getDailyEntries(accountId: number, year: number, month: number): DailyEntry[];
+  getDailyEntry(id: number): DailyEntry | undefined;
+  createDailyEntry(data: InsertDailyEntry): DailyEntry;
+  updateDailyEntry(id: number, data: Partial<InsertDailyEntry>): DailyEntry | undefined;
+  deleteDailyEntry(id: number): void;
+  upsertDailyEntry(accountId: number, year: number, month: number, day: number, category: string, amount: number, notes?: string | null): DailyEntry;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -257,6 +280,67 @@ export class DatabaseStorage implements IStorage {
   }
   deleteGoal(id: number): void {
     db.delete(goals).where(eq(goals.id, id)).run();
+  }
+
+  // Daily Entries
+  getDailyEntries(accountId: number, year: number, month: number): DailyEntry[] {
+    return db.select()
+      .from(dailyEntries)
+      .where(
+        and(
+          eq(dailyEntries.accountId, accountId),
+          eq(dailyEntries.year, year),
+          eq(dailyEntries.month, month)
+        )
+      )
+      .all();
+  }
+
+  getDailyEntry(id: number): DailyEntry | undefined {
+    return db.select().from(dailyEntries).where(eq(dailyEntries.id, id)).get();
+  }
+
+  createDailyEntry(data: InsertDailyEntry): DailyEntry {
+    return db.insert(dailyEntries).values(data).returning().get();
+  }
+
+  updateDailyEntry(id: number, data: Partial<InsertDailyEntry>): DailyEntry | undefined {
+    return db.update(dailyEntries).set(data).where(eq(dailyEntries.id, id)).returning().get();
+  }
+
+  deleteDailyEntry(id: number): void {
+    db.delete(dailyEntries).where(eq(dailyEntries.id, id)).run();
+  }
+
+  upsertDailyEntry(accountId: number, year: number, month: number, day: number, category: string, amount: number, notes?: string | null): DailyEntry {
+    // Find existing entry
+    const existing = db.select()
+      .from(dailyEntries)
+      .where(
+        and(
+          eq(dailyEntries.accountId, accountId),
+          eq(dailyEntries.year, year),
+          eq(dailyEntries.month, month),
+          eq(dailyEntries.day, day),
+          eq(dailyEntries.category, category)
+        )
+      )
+      .get();
+
+    if (existing) {
+      // Update existing
+      return db.update(dailyEntries)
+        .set({ amount, notes })
+        .where(eq(dailyEntries.id, existing.id))
+        .returning()
+        .get()!;
+    } else {
+      // Insert new
+      return db.insert(dailyEntries)
+        .values({ accountId, year, month, day, category, amount, notes })
+        .returning()
+        .get();
+    }
   }
 }
 

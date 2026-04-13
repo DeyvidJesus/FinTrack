@@ -1,0 +1,23 @@
+{
+  "title": "Daily Tracker",
+  "subtitle": "Track your daily income and expenses in a monthly matrix",
+  "matrix": {
+    "title": "Monthly Matrix",
+    "day": "Day",
+    "balance": "Balance",
+    "total": "Total",
+    "percentage": "%"
+  },
+  "summary": {
+    "previousMonth": "Previous Month Balance",
+    "currentMonth": "Current Month Balance",
+    "nextMonth": "Next Month Balance"
+  },
+  "empty": {
+    "noAccount": "Create an account to start tracking daily entries"
+  },
+  "messages": {
+    "saved": "Entry saved successfully",
+    "failedToSave": "Failed to save entry"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "title": "Control Diario",
+  "subtitle": "Registra tus ingresos y gastos diarios en una matriz mensual",
+  "matrix": {
+    "title": "Matriz Mensual",
+    "day": "Día",
+    "balance": "Saldo",
+    "total": "Total",
+    "percentage": "%"
+  },
+  "summary": {
+    "previousMonth": "Saldo del Mes Anterior",
+    "currentMonth": "Saldo del Mes",
+    "nextMonth": "Saldo para Próximo Mes"
+  },
+  "empty": {
+    "noAccount": "Crea una cuenta para comenzar a registrar entradas diarias"
+  },
+  "messages": {
+    "saved": "Entrada guardada con éxito",
+    "failedToSave": "Error al guardar entrada"
+  }
+}

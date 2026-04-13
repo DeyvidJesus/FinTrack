@@ -1,4 +1,4 @@
-import { LayoutDashboard, ArrowLeftRight, TrendingUp, Target, Wallet, Settings, Sun, Moon } from "lucide-react";
+import { LayoutDashboard, ArrowLeftRight, TrendingUp, Target, Wallet, Calendar, Settings, Sun, Moon } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { useTranslation } from "react-i18next";
 import {
@@ -24,6 +24,7 @@ export function AppSidebar() {
   const navItems = [
     { title: t('nav.dashboard'), url: "/", icon: LayoutDashboard },
     { title: t('nav.transactions'), url: "/transactions", icon: ArrowLeftRight },
+    { title: t('nav.dailyEntries'), url: "/daily-entries", icon: Calendar },
     { title: t('nav.investments'), url: "/investments", icon: TrendingUp },
     { title: t('nav.goals'), url: "/goals", icon: Target },
     { title: t('nav.accounts'), url: "/accounts", icon: Wallet },

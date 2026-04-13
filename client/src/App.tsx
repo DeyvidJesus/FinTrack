@@ -13,6 +13,7 @@ import Transactions from "@/pages/transactions";
 import Investments from "@/pages/investments";
 import Goals from "@/pages/goals";
 import Accounts from "@/pages/accounts";
+import DailyEntries from "@/pages/daily-entries";
 import NotFound from "@/pages/not-found";
 
 function AppRouter() {
@@ -23,6 +24,7 @@ function AppRouter() {
       <Route path="/investments" component={Investments} />
       <Route path="/goals" component={Goals} />
       <Route path="/accounts" component={Accounts} />
+      <Route path="/daily-entries" component={DailyEntries} />
       <Route component={NotFound} />
     </Switch>
   );
