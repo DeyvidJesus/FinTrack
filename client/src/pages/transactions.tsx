@@ -53,6 +53,7 @@ export default function Transactions() {
       queryClient.invalidateQueries({ queryKey: ["/api/transactions"] });
       queryClient.invalidateQueries({ queryKey: ["/api/accounts"] });
       queryClient.invalidateQueries({ queryKey: ["/api/stats"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/daily-entries"] });
       setDialogOpen(false);
       setForm({ description: "", amount: "", type: "expense", date: getTodayISO(), accountId: "", categoryId: "", notes: "" });
       toast({ title: t('transactions:messages.added') });
@@ -72,6 +73,7 @@ export default function Transactions() {
       queryClient.invalidateQueries({ queryKey: ["/api/transactions"] });
       queryClient.invalidateQueries({ queryKey: ["/api/accounts"] });
       queryClient.invalidateQueries({ queryKey: ["/api/stats"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/daily-entries"] });
       toast({ title: t('transactions:messages.deleted') });
     },
   });

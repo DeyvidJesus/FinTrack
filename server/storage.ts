@@ -122,6 +122,127 @@ function getTransactionDelta(type: Transaction["type"], amount: number) {
   return 0;
 }
 
+// Map transaction category names to daily entry categories
+function mapCategoryToDailyEntry(categoryName: string | null, type: Transaction["type"]): string {
+  if (type === "income") return "renda";
+
+  if (!categoryName) return "diversos";
+
+  const normalizedName = categoryName.toLowerCase();
+
+  // Map common category names
+  const categoryMap: Record<string, string> = {
+    "salary": "renda",
+    "freelance": "renda",
+    "investment return": "renda",
+    "other income": "renda",
+    "food & dining": "alimentacao",
+    "housing": "moradia",
+    "transportation": "transporte",
+    "utilities": "manutencao",
+    "entertainment": "lazer_eventos",
+    "shopping": "vestuario",
+    "health": "saude",
+    "education": "educacao",
+    "subscriptions": "comunicacao",
+    "other expense": "diversos",
+  };
+
+  return categoryMap[normalizedName] || "diversos";
+}
+
+// Sync transaction to daily entry
+function syncTransactionToDailyEntry(
+  db: ReturnType<typeof drizzle>,
+  transaction: Transaction,
+  categoryName: string | null
+): void {
+  // Parse date as local date (YYYY-MM-DD format)
+  const [year, month, day] = transaction.date.split('-').map(Number);
+
+  const dailyCategory = mapCategoryToDailyEntry(categoryName, transaction.type);
+  const amount = getTransactionDelta(transaction.type, transaction.amount);
+
+  // Find existing entry for this day and category
+  const existing = db.select()
+    .from(dailyEntries)
+    .where(
+      and(
+        eq(dailyEntries.accountId, transaction.accountId),
+        eq(dailyEntries.year, year),
+        eq(dailyEntries.month, month),
+        eq(dailyEntries.day, day),
+        eq(dailyEntries.category, dailyCategory)
+      )
+    )
+    .get();
+
+  if (existing) {
+    // Update existing entry by adding the transaction amount
+    db.update(dailyEntries)
+      .set({ amount: existing.amount + amount })
+      .where(eq(dailyEntries.id, existing.id))
+      .run();
+  } else {
+    // Create new entry
+    db.insert(dailyEntries)
+      .values({
+        accountId: transaction.accountId,
+        year,
+        month,
+        day,
+        category: dailyCategory,
+        amount,
+        notes: null
+      })
+      .run();
+  }
+}
+
+// Remove transaction from daily entry
+function unsyncTransactionFromDailyEntry(
+  db: ReturnType<typeof drizzle>,
+  transaction: Transaction,
+  categoryName: string | null
+): void {
+  // Parse date as local date (YYYY-MM-DD format)
+  const [year, month, day] = transaction.date.split('-').map(Number);
+
+  const dailyCategory = mapCategoryToDailyEntry(categoryName, transaction.type);
+  const amount = getTransactionDelta(transaction.type, transaction.amount);
+
+  // Find existing entry
+  const existing = db.select()
+    .from(dailyEntries)
+    .where(
+      and(
+        eq(dailyEntries.accountId, transaction.accountId),
+        eq(dailyEntries.year, year),
+        eq(dailyEntries.month, month),
+        eq(dailyEntries.day, day),
+        eq(dailyEntries.category, dailyCategory)
+      )
+    )
+    .get();
+
+  if (existing) {
+    const newAmount = existing.amount - amount;
+
+    // If amount becomes 0, delete the entry
+    if (Math.abs(newAmount) < 0.01) {
+      db.delete(dailyEntries)
+        .where(eq(dailyEntries.id, existing.id))
+        .run();
+    } else {
+      // Otherwise update the amount
+      db.update(dailyEntries)
+        .set({ amount: newAmount })
+        .where(eq(dailyEntries.id, existing.id))
+        .run();
+    }
+  }
+}
+
 ensureSchema();
 seedDefaultCategories();
 
@@ -160,6 +281,7 @@ export interface IStorage {
 
   // Daily Entries
   getDailyEntries(accountId: number, year: number, month: number): DailyEntry[];
+  getDailyEntriesBeforeMonth(accountId: number, year: number, month: number): DailyEntry[];
   getDailyEntry(id: number): DailyEntry | undefined;
   createDailyEntry(data: InsertDailyEntry): DailyEntry;
   updateDailyEntry(id: number, data: Partial<InsertDailyEntry>): DailyEntry | undefined;
@@ -223,16 +345,32 @@ export class DatabaseStorage implements IStorage {
   createTransaction(data: InsertTransaction): Transaction {
     const tx = db.insert(transactions).values(data).returning().get();
     this.adjustAccountBalance(data.accountId, getTransactionDelta(data.type, data.amount));
+
+    // Sync to daily entries
+    const category = data.categoryId ? this.getCategories().find(c => c.id === data.categoryId) : null;
+    syncTransactionToDailyEntry(db, tx, category?.name || null);
+
     return tx;
   }
   updateTransaction(id: number, data: Partial<InsertTransaction>): Transaction | undefined {
     const existing = this.getTransaction(id);
     if (!existing) return undefined;
 
+    // Remove old transaction from daily entries
+    const oldCategory = existing.categoryId ? this.getCategories().find(c => c.id === existing.categoryId) : null;
+    unsyncTransactionFromDailyEntry(db, existing, oldCategory?.name || null);
+
+    // Update account balance
+    this.adjustAccountBalance(existing.accountId, -getTransactionDelta(existing.type, existing.amount));
+
     const updated = db.update(transactions).set(data).where(eq(transactions.id, id)).returning().get();
     if (!updated) return undefined;
 
-    this.adjustAccountBalance(existing.accountId, -getTransactionDelta(existing.type, existing.amount));
+    // Add new transaction to daily entries
+    const newCategory = updated.categoryId ? this.getCategories().find(c => c.id === updated.categoryId) : null;
+    syncTransactionToDailyEntry(db, updated, newCategory?.name || null);
+
+    // Update account balance with new values
     this.adjustAccountBalance(updated.accountId, getTransactionDelta(updated.type, updated.amount));
 
     return updated;
@@ -240,6 +378,11 @@ export class DatabaseStorage implements IStorage {
   deleteTransaction(id: number): void {
     const tx = this.getTransaction(id);
     if (tx) {
+      // Remove from daily entries
+      const category = tx.categoryId ? this.getCategories().find(c => c.id === tx.categoryId) : null;
+      unsyncTransactionFromDailyEntry(db, tx, category?.name || null);
+
+      // Adjust account balance
       this.adjustAccountBalance(tx.accountId, -getTransactionDelta(tx.type, tx.amount));
     }
     db.delete(transactions).where(eq(transactions.id, id)).run();
@@ -294,6 +437,21 @@ export class DatabaseStorage implements IStorage {
         )
       )
       .all();
+  }
+
+  getDailyEntriesBeforeMonth(accountId: number, year: number, month: number): DailyEntry[] {
+    // Get all entries before the specified month
+    const allEntries = db.select()
+      .from(dailyEntries)
+      .where(eq(dailyEntries.accountId, accountId))
+      .all();
+
+    // Filter entries before the specified year/month
+    return allEntries.filter(entry => {
+      if (entry.year < year) return true;
+      if (entry.year === year && entry.month < month) return true;
+      return false;
+    });
   }
 
   getDailyEntry(id: number): DailyEntry | undefined {

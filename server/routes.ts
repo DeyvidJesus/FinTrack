@@ -261,9 +261,14 @@ export async function registerRoutes(
     // Calculate consolidated balances
     const saldoMes = Object.values(dailyBalances).reduce((sum, bal) => sum + bal, 0);
 
-    // For previous month balance, we'd need to query previous months
-    // For simplicity, we'll return 0 here, but this could be extended
-    const saldoMesAnterior = 0;
+    // Calculate previous month balance by querying all transactions before this month
+    let saldoMesAnterior = 0;
+    if (year && month) {
+      // Get all daily entries before this month for this account
+      const allPreviousEntries = storage.getDailyEntriesBeforeMonth(accountId, year, month);
+      saldoMesAnterior = allPreviousEntries.reduce((sum, e) => sum + e.amount, 0);
+    }
+
     const saldoProximoMes = saldoMesAnterior + saldoMes;
 
     res.json({
